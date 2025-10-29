@@ -5,6 +5,7 @@ import static git.artdeell.skymodloader.MainActivity.SKY_PACKAGE_NAME;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Handler;
+import android.util.Log;
 import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.WebResourceRequest;
@@ -118,6 +119,8 @@ public class WebLogin extends WebViewClient implements SystemAccountInterface, R
         webView.setWebViewClient(this);
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setUseWideViewPort(true);
         if(this.accountType == SystemAccountType.kSystemAccountType_Google) {
             settings.setUserAgentString("Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36");
         }
@@ -129,6 +132,7 @@ public class WebLogin extends WebViewClient implements SystemAccountInterface, R
 
     public boolean shouldOverrideUrlLoading(WebView webView, WebResourceRequest webResourceRequest) {
         final String url = webResourceRequest.getUrl().toString();
+        Log.i("CanvasWebLogin", String.format("Override url check -> %s", url));
         if(url.startsWith(redirectUrl)) {
             dialog.hide();
             new Thread(()-> processLoading(url)).start();
